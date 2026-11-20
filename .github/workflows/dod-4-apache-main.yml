@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# DoD 4 · Apache auf main – Abzeichen für einen Punkt der Definition of Done (siehe README).
+# Dieser Workflow ist unabhängig von allen anderen: eigene Auslöser,
+# eigene Prüfung (Skript .github/dod/dod-4-apache-main.sh). Rot heißt: noch nicht erfüllt.
+# Kosten: öffentliches Repo + Standard-Runner = kostenlos.
+# ---------------------------------------------------------------------------
+name: DoD 4 · Apache auf main
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:    # zusätzlich per Knopfdruck im Actions-Tab
+
+permissions:
+  contents: read
+
+jobs:
+  pruefen:
+    name: "DoD 4 – Apache httpd läuft auf main"
+    # In der Vorlage selbst (Template-Repository) wird nicht geprüft.
+    if: ${{ !github.event.repository.is_template }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Code auschecken"
+        uses: actions/checkout@v7
+
+      - name: "DoD 4 · Apache auf main prüfen"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .github/dod/dod-4-apache-main.sh

@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+# DoD 5 · Pull Request – Abzeichen für einen Punkt der Definition of Done (siehe README).
+# Dieser Workflow ist unabhängig von allen anderen: eigene Auslöser,
+# eigene Prüfung (Skript .github/dod/dod-5-pull-request.sh). Rot heißt: noch nicht erfüllt.
+# Kosten: öffentliches Repo + Standard-Runner = kostenlos.
+# ---------------------------------------------------------------------------
+name: DoD 5 · Pull Request
+
+on:
+  push:
+    branches: [main]    # auch ein Merge erzeugt einen Push auf main
+  workflow_dispatch:    # zusätzlich per Knopfdruck im Actions-Tab
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+
+jobs:
+  pruefen:
+    name: "DoD 5 – Pull Request dev → main erst nach grünem Test gemergt"
+    # In der Vorlage selbst (Template-Repository) wird nicht geprüft.
+    if: ${{ !github.event.repository.is_template }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: "Code auschecken"
+        uses: actions/checkout@v7
+
+      - name: "DoD 5 · Pull Request prüfen"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .github/dod/dod-5-pull-request.sh
