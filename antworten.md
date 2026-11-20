@@ -61,3 +61,16 @@ dass jeder Admin „mal kurz mit curl testet“.
 Antwort: Kein menschlicher Faktor, Zeit sparen. Wenn der Test vom Admin gemacht wird kann auch
 mal ein Use-Case vergessen werden zu testen. Dadurch würde man den Fehler evtl viel später merken.
 
+## Reflextion
+Beschreibe den Weg einer Änderung von deinem Editor bis in den Betrieb, mit allen Stationen dieser Woche.
+Antwort: Die compose.yml auf dem LXC bearbeitet -> Git Commit: Änderungen lokal mit git add und git commit auf einem separaten dev branch gespeichert -> Git Push: Änderungen auf github hochgeladen -> Automatischer Workflow prüft die Syntax, startet den Container und vergleicht die Webseite mit diff. -> Pull Request: Einen Pull request erstellt von dev zu main. Sobald alle Checks grün sind, wird der Code freigegeben. -> Merge: Nach dem Merge von dev nach main landet die geänderte Konfiguration in der Aktuellen Version.
+
+Was hätte passieren können, wenn du den ersten (roten) Apache-Versuch direkt auf main gepusht und auf dem LXC ausgerollt hättest?
+Der Webserver wäre falsch konfiguriert und die Statusseite von Apache statt der Technova Seite wäre angezeigt worden.
+
+In deinem Repo hält dich technisch nichts davon ab, einen roten PR zu mergen. Was sorgt in einem Team dafür, dass die Regel „nur grün mergen“ trotzdem eingehalten wird?
+Gegenseitige Code-Reviews im Team sollten verhindern, das fehlerhafte Codes in den Produktivbranch übernommen werden.
+
+Welche Vorteile hat es, dass deine komplette Konfiguration jetzt auf GitHub liegt? Denke an einen Totalausfall deines LXC-Containers.
+Zentrales Backup. Bei Totalausfall des Containers könnte man einfach das Repo auf einem Neuen System im Exakt selben Zustand starten. Außerdem ist es dank der Git-Historie nachvollziehbar wer wann welche Änderung vorgenommen hat.
+
